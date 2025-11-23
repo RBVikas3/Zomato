@@ -2,7 +2,7 @@ resource "aws_instance" "test-server" {
   ami = "ami-0d176f79571d18a8f"
   instance_type = "t3.medium"
   key_name = "zomoto"
-  vpc_security_group_ids = ["sg-01d81bc7936b24bc2"]
+  vpc_security_group_ids = []
   connection {
      type = "ssh"
      user = "ec2-user"
