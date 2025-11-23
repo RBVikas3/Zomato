@@ -31,19 +31,37 @@ stage("Tag & Push to DockerHub") {
         }
     }
 }
-   stage('Config & Deployment') {
-            steps {
-                
-               withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awslogin', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    dir('terraformfiles') {
+  stage('Config & Deployment') {
+    steps {
+        withEnv(["AWS_REGION=ap-south-1"]) {
+
+            withCredentials([
+                aws(
+                    credentialsId: 'awslogin',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                )
+            ]) {
+
+                dir('terraformfiles') {
+
                     sh 'sudo chmod 600 zomoto.pem'
+
                     sh 'terraform init'
                     sh 'terraform validate'
-                    sh 'terraform apply --auto-approve'
-}
+
+                    // IMPORTANT: pass region variable
+                    sh '''
+                    terraform apply \
+                      -var="region=${AWS_REGION}" \
+                      --auto-approve
+                    '''
+                }
+            }
+        }
     }
 }
-}
+
 
 }
   }
