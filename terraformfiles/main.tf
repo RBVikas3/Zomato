@@ -2,7 +2,7 @@ resource "aws_instance" "test-server" {
   ami = "ami-0d176f79571d18a8f"
   instance_type = "t3.medium"
   key_name = "zomoto"
-  vpc_security_group_ids = []
+  vpc_security_group_ids = ["sg-0126bf2d22d003069"]
   connection {
      type = "ssh"
      user = "ec2-user"
@@ -19,6 +19,6 @@ resource "aws_instance" "test-server" {
      command = "echo ${aws_instance.test-server.public_ip} > inventory"
      }
   provisioner "local-exec" {
-     command = "ansible-playbook /var/lib/jenkins/workspace/zomota/terraformfiles/ansiblebook.yml"
+     command = "ansible-playbook /var/lib/jenkins/workspace/Zomato/terraformfiles/ansiblebook.yml"
      }
   }
